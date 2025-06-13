@@ -6,8 +6,8 @@ import { useRef, useState, useEffect } from "react";
 import { useProcess } from "../../../context/process";
 
 const AudioType = "audio/wav";
-const TEXTPOSTURL = "/api/execute";
-const AUDIOPOSTURL = "/api/stt";
+const TEXTPOSTURL = "/execute";
+const AUDIOPOSTURL = "/stt";
 
 declare global {
   interface Window {
