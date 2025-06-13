@@ -1,15 +1,28 @@
 // src/app/api/stt/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-const EXTERNAL_URL = "https://6a7d-39-122-179-149.ngrok-free.app/stt_base64";
+const STT_URL = process.env.STT_BASE_URL!;
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const res = await fetch(EXTERNAL_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  return NextResponse.json(data);
+  try {
+    const body = await request.json();
+    const upstream = await fetch(`${STT_URL}/stt_base64`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 필요하다면 인증 토큰도 붙이세요:
+        // Authorization: `Bearer ${process.env.REMOTE_API_TOKEN}`
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await upstream.json();
+    return NextResponse.json(data);
+  } catch (err: any) {
+    console.error("[proxy /api/stt] error", err);
+    return NextResponse.json(
+      { error: "Proxy request failed" },
+      { status: 500 }
+    );
+  }
 }

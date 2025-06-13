@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const EXTERNAL_URL = "https://9019-59-1-100-185.ngrok-free.app/execute";
+const EXECUTE_BASE_URL = process.env.EXECUTE_BASE_URL!;
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const res = await fetch(EXTERNAL_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  console.log(data);
-  return NextResponse.json(data);
+  try {
+    const body = await request.json();
+    const upstreamRes = await fetch(`${EXECUTE_BASE_URL}/execute`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await upstreamRes.json();
+    return NextResponse.json(data, { status: upstreamRes.status });
+  } catch (err: any) {
+    console.error("[proxy /api/execute] error", err);
+    return NextResponse.json(
+      { error: "Proxy request failed" },
+      { status: 500 }
+    );
+  }
 }
