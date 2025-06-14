@@ -3,6 +3,7 @@
 import styles from "./page.module.css";
 import ProgressBar from "./components/ProgressBar";
 import UserInput from "./components/UserInput";
+import Guide from "./components/Guide";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <ProgressBar />
       <div className={styles.inputGroup}>
         <UserInput />
+        <Guide />
       </div>
     </div>
   );

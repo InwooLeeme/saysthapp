@@ -1,0 +1,19 @@
+.guideIcon {
+    color: whitesmoke;
+    position: absolute;
+    right: 1.5rem;
+    bottom: -2.5rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #495057;
+    transition: opacity 0.3s ease;
+}
+
+.guideIcon:hover {
+    opacity: 0.8;
+}
