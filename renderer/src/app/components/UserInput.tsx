@@ -9,6 +9,7 @@ import ErrorDisplay from "./ErrorDisplay";
 const AudioType = "audio/wav";
 const TEXTPOSTURL = "/api/execute";
 const AUDIOPOSTURL = "/api/stt";
+const MCPPOSTURL = "/api/mcp";
 
 declare global {
   interface Window {
@@ -59,6 +60,13 @@ export default function UserInput() {
       console.log(`${data.code}`);
 
       // TODO: Post To MCP Server, Agent Server에서 받아온 결과를 Local MCP Server에 전달합니다
+      const mcpRes = await fetch(MCPPOSTURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: data.code }),
+      });
+      const mcpData = await mcpRes.json();
+      console.log(`${mcpData}`);
       runCode(data.code);
     } catch (error) {
       console.error(error);
@@ -87,6 +95,13 @@ export default function UserInput() {
         setInputValue("");
 
         // TODO: Post To MCP Server, Agent Server에서 받아온 결과를 Local MCP Server에 전달합니다
+        const mcpRes = await fetch(MCPPOSTURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: data.code }),
+        });
+        const mcpData = await mcpRes.json();
+        console.log(`${mcpData}`);
         runCode(data.code);
       } catch (error) {
         console.error(error);
