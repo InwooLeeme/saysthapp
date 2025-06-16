@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState, useEffect } from "react";
 import { useProcess } from "../../../context/process";
+import ErrorDisplay from "./ErrorDisplay";
 
 const AudioType = "audio/wav";
 const TEXTPOSTURL = "/api/execute";
@@ -20,6 +21,7 @@ declare global {
 export default function UserInput() {
   const [inputValue, setInputValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { isProcessing, setIsProcessing } = useProcess();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -39,6 +41,7 @@ export default function UserInput() {
   const sendTextToAgent = async (text: string) => {
     try {
       setIsProcessing(true);
+      setError(null);
       console.log(TEXTPOSTURL);
 
       const res = await fetch(TEXTPOSTURL, {
@@ -46,12 +49,20 @@ export default function UserInput() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: text }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.detail || '요청을 처리하는 중 오류가 발생했습니다.');
+      }
+
       const data = await res.json();
       console.log(`${data.code}`);
 
+      // TODO: Post To MCP Server, Agent Server에서 받아온 결과를 Local MCP Server에 전달합니다
       runCode(data.code);
     } catch (error) {
       console.error(error);
+      setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
       setIsProcessing(false);
     }
   };
@@ -60,16 +71,26 @@ export default function UserInput() {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       try {
         setIsProcessing(true);
+        setError(null);
         const res = await fetch(TEXTPOSTURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: inputValue.trim() }),
         });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.detail || '요청을 처리하는 중 오류가 발생했습니다.');
+        }
+
         const data = await res.json();
         setInputValue("");
+
+        // TODO: Post To MCP Server, Agent Server에서 받아온 결과를 Local MCP Server에 전달합니다
         runCode(data.code);
       } catch (error) {
         console.error(error);
+        setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
         setIsProcessing(false);
       }
     }
@@ -141,17 +162,22 @@ export default function UserInput() {
 
   return (
     <>
+      <ErrorDisplay 
+        error={error} 
+        onDismiss={() => setError(null)} 
+      />
       <input
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         className={styles.userInput}
         placeholder="명령을 입력하세요"
-        disabled={isRecording} // 녹음 중엔 입력 비활성화
+        disabled={isRecording || isProcessing}
       />
       <div
         onClick={handleMicClick}
-        className={`${styles.micIcon} ${isRecording ? styles.rainbow : ""}`}
+        className={`${styles.micIcon} ${isRecording ? styles.rainbow : ''} ${isProcessing ? styles.disabled : ''}`}
+        style={isProcessing ? { pointerEvents: 'none', opacity: 0.6 } : {}}
       >
         <FontAwesomeIcon icon={faMicrophone} />
       </div>

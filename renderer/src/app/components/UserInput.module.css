@@ -47,6 +47,13 @@
   animation: rainbow-border 2s infinite linear;
 }
 
+/* 마이크 버튼 비활성화 상태 */
+.micIcon.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* 3) 무지개색 keyframes */
 @keyframes rainbow-border {
   0% {
