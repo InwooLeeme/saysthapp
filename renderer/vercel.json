@@ -1,7 +1,7 @@
 {
    "version":2,
    "env":{
-    "EXECUTE_BASE_URL": "https://2705-59-1-100-185.ngrok-free.app",
+    "EXECUTE_BASE_URL": "https://2461-114-202-23-66.ngrok-free.app",
     "STT_BASE_URL" : "https://6a7d-39-122-179-149.ngrok-free.app",
     "MCP_BASE_URL" : "https://localhost:8080"
    }
