@@ -57,17 +57,22 @@ export default function UserInput() {
       }
 
       const data = await res.json();
-      console.log(`${data.code}`);
+      console.log('Agent 응답:', data);
 
       // TODO: Post To MCP Server, Agent Server에서 받아온 결과를 Local MCP Server에 전달합니다
       const mcpRes = await fetch(MCPPOSTURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: data.code }),
+        body: JSON.stringify(data), // 받은 데이터를 그대로 전달
       });
+      
+      if (!mcpRes.ok) {
+        throw new Error('MCP 서버 요청에 실패했습니다.');
+      }
+      
       const mcpData = await mcpRes.json();
-      console.log(`${mcpData}`);
-      runCode(data.code);
+      console.log('MCP 응답:', mcpData);
+      //runCode(data.code);
     } catch (error) {
       console.error(error);
       setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
@@ -98,11 +103,16 @@ export default function UserInput() {
         const mcpRes = await fetch(MCPPOSTURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code: data.code }),
+          body: JSON.stringify(data), // 받은 데이터를 그대로 전달
         });
+        
+        if (!mcpRes.ok) {
+          throw new Error('MCP 서버 요청에 실패했습니다.');
+        }
+        
         const mcpData = await mcpRes.json();
-        console.log(`${mcpData}`);
-        runCode(data.code);
+        console.log('MCP 응답:', mcpData);
+        //runCode(data.code);
       } catch (error) {
         console.error(error);
         setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
