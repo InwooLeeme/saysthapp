@@ -3,7 +3,7 @@
    "env":{
     "EXECUTE_BASE_URL": "https://2461-114-202-23-66.ngrok-free.app",
     "STT_BASE_URL" : "https://6a7d-39-122-179-149.ngrok-free.app",
-    "MCP_BASE_URL" : "https://127.0.0.1:8002"
+    "MCP_BASE_URL" : "https://9733-116-120-97-135.ngrok-free.app"
    },
    "functions": {
     "api/mcp.py": {
