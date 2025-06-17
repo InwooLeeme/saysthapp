@@ -85,6 +85,19 @@ export default function UserInput() {
       try {
         setIsProcessing(true);
         setError(null);
+
+        // for Post Test
+        const mcpTestRes = await fetch(MCPPOSTURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "type": "run_python_code",
+  "payload": {
+    "code": "import webbrowser\nwebbrowser.open('https://www.youtube.com/watch?v=5cFQkqJOAbI&list=RD5cFQkqJOAbI&start_radio=1')"
+  }
+          }), // 받은 데이터를 그대로 전달
+        });
+
         const res = await fetch(TEXTPOSTURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
