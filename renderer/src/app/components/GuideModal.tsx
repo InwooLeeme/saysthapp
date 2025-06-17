@@ -18,11 +18,10 @@ export default function GuideModal({ isOpen, onClose }: GuideModalProps) {
         </button>
         <h2 className={styles.modalTitle}>사용 가이드</h2>
         <div className={styles.guideSection}>
-          <h3 className={styles.sectionTitle}>음성 명령 예시</h3>
+          <h3 className={styles.sectionTitle}>음성 및 텍스트 명령 예시</h3>
           <ul className={styles.guideList}>
-            <li className={styles.guideItem}>"파일 열기" - 파일 탐색기 열기</li>
-            <li className={styles.guideItem}>"인터넷 검색 [검색어]" - 웹 검색 실행</li>
-            <li className={styles.guideItem}>"앱 실행 [앱 이름]" - 특정 애플리케이션 실행</li>
+            <li className={styles.guideItem}>웹 검색 실행 - (EX : 네이버 켜줘)</li>
+            <li className={styles.guideItem}>특정 애플리케이션 실행 - (EX : 메모장 켜줘)</li>
           </ul>
         </div>
         <div className={styles.guideSection}>
