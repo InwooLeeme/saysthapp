@@ -15,6 +15,8 @@ declare global {
   interface Window {
     electronAPI: {
       runPythonCode: (code: string) => Promise<string>;
+      sendRequest: (data: any) => void;
+      onResponse: (callback: (response: any) => void) => void;
     };
   }
 }
@@ -86,17 +88,15 @@ export default function UserInput() {
         setIsProcessing(true);
         setError(null);
 
-        // for Post Test
-        const mcpTestRes = await fetch(MCPPOSTURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            "type": "run_python_code",
-  "payload": {
-    "code": "import webbrowser\nwebbrowser.open('https://www.youtube.com/watch?v=5cFQkqJOAbI&list=RD5cFQkqJOAbI&start_radio=1')"
-  }
-          }), // 받은 데이터를 그대로 전달
-        });
+        // for Post Test - Electron IPC를 통한 요청
+        window.electronAPI.sendRequest({
+          type: "run_python_code",
+          payload: {
+            code: "import webbrowser\nwebbrowser.open('https://www.youtube.com/watch?v=5cFQkqJOAbI&list=RD5cFQkqJOAbI&start_radio=1')"
+          }
+        }) // 받은 데이터를 그대로 전달
+        
+        
 
         const res = await fetch(TEXTPOSTURL, {
           method: "POST",
