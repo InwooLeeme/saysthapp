@@ -6,7 +6,7 @@ const STT_URL = process.env.STT_BASE_URL!;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const upstream = await fetch(`${STT_URL}/stt_base64`, {
+    const upstream = await fetch(`${STT_URL}/stt`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
