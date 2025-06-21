@@ -77,36 +77,19 @@ export default function UserInput() {
       try {
         setIsProcessing(true);
         setError(null);
-
-        // for Post Test - Electron IPC를 통한 요청
-        /* 
-        window.electronAPI.sendRequest({
-          type: "run_python_code",
-          payload: {
-            code: "import webbrowser\nwebbrowser.open('https://www.youtube.com/watch?v=5cFQkqJOAbI&list=RD5cFQkqJOAbI&start_radio=1')"
-          }
-        }) // 받은 데이터를 그대로 전달
-         */
-        
-
         const res = await fetch(TEXTPOSTURL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: inputValue.trim() }),
         });
-
         if (!res.ok) {
           const errorData = await res.json().catch(() => ({}));
           throw new Error(errorData.detail || '요청을 처리하는 중 오류가 발생했습니다.');
         }
-
         const data = await res.json();
         setInputValue("");
-
         // TODO: Post To MCP Server, Agent Server에서 받아온 결과를 Local MCP Server에 전달합니다
         window.electronAPI.sendRequest(data);
-
-        //runCode(data.code);
       } catch (error) {
         console.error(error);
         setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.');
